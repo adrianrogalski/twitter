@@ -19,7 +19,7 @@ public class Tweet {
     private String content;
     @ManyToMany
     private Set<Hashtag> hashtagSet;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User author;
     private long respondId;
     private LocalDateTime publishingTime;

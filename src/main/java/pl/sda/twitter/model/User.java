@@ -1,6 +1,7 @@
 package pl.sda.twitter.model;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,6 +17,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    @OneToMany
-    private List<User> followers;
+    //@OneToMany
+    //private List<User> followers;
 }
