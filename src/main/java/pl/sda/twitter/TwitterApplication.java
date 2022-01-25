@@ -24,7 +24,7 @@ public class TwitterApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         User user1 = User.builder()
-                .name("Jan")
+                .name("Joan")
                 .build();
 
         TweetDto tweetDto1 = TweetDto.builder()
