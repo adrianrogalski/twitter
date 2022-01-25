@@ -8,4 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class HomeController {
 
+    @GetMapping("/")
+    public String home() {
+        return "index";
+    }
+
 }
