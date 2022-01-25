@@ -22,4 +22,6 @@ public class TweetsController {
     public List<Tweet> findTweetsByUser(@PathVariable long id) {
         return tweetService.findAllTweets(id);
     }
+
+    // Karol test ...
 }
