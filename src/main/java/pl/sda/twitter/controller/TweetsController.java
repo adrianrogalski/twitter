@@ -3,6 +3,7 @@ package pl.sda.twitter.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaUserRepository;
@@ -24,7 +25,7 @@ public class TweetsController {
 
     @GetMapping("/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
-    public List<Tweet> findTweetsByUser(@PathVariable long id) {
+    public List<TweetDtoOut> findTweetsByUser(@PathVariable long id) {
         return tweetService.findAllTweets(id);
     }
 

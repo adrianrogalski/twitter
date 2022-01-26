@@ -31,9 +31,6 @@ public class TwitterApplication implements CommandLineRunner {
                 .name("Jan")
                 .build();
 
-        User user2 = User.builder()
-                .name("Jan")
-                .build();
 
         TweetDto tweetDto1 = TweetDto.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
@@ -49,7 +46,7 @@ public class TwitterApplication implements CommandLineRunner {
 
         TweetDtoOut tweetDtoOut1 = new TweetDtoOut ("Moj post", LocalDateTime.now());
 
-        System.out.println(tweetDtoOut1.getTime());
+
 
     }
 }
