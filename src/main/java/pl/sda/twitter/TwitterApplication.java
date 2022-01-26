@@ -7,6 +7,7 @@ import pl.sda.twitter.dto.TweetDto;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.service.TweetService;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 
 @SpringBootApplication
@@ -21,16 +22,28 @@ public class TwitterApplication implements CommandLineRunner {
         SpringApplication.run(TwitterApplication.class, args);
     }
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         User user1 = User.builder()
                 .name("Jan")
                 .build();
 
+        User user2 = User.builder()
+                .name("Jan")
+                .build();
+
         TweetDto tweetDto1 = TweetDto.builder()
-                .content("jdhasdfkjhsadfjhsdal")
+                .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
                 .build();
 
         tweetService.add(user1, tweetDto1);
+
+        TweetDto tweetDto2 = TweetDto.builder()
+                .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
+                .build();
+
+        tweetService.add(user1, tweetDto2);
+
     }
 }

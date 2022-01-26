@@ -1,9 +1,6 @@
 package pl.sda.twitter.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.service.TweetService;
 
@@ -19,6 +16,7 @@ public class TweetsController {
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = "http://localhost:4200")
     public List<Tweet> findTweetsByUser(@PathVariable long id) {
         return tweetService.findAllTweets(id);
     }
