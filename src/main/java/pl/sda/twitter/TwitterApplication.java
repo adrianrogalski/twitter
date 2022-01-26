@@ -4,10 +4,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.service.TweetService;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @SpringBootApplication
@@ -44,6 +46,10 @@ public class TwitterApplication implements CommandLineRunner {
                 .build();
 
         tweetService.add(user1, tweetDto2);
+
+        TweetDtoOut tweetDtoOut1 = new TweetDtoOut ("Moj post", LocalDateTime.now());
+
+        System.out.println(tweetDtoOut1.getTime());
 
     }
 }
