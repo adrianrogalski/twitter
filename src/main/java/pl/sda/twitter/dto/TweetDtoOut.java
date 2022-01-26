@@ -3,6 +3,8 @@ package pl.sda.twitter.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -11,25 +13,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TweetDtoOut {
     private String content;
-    private LocalDateTime publishingTime;
-
     private String time;
 
     public TweetDtoOut(String content, LocalDateTime publishingTime) {
         this.content = content;
-        this.publishingTime = publishingTime;
         this.time = timeMapper(publishingTime);
     }
 
     private static String timeMapper(LocalDateTime localDateTime){
-        String Year = String.valueOf(LocalDateTime.now().getYear());
-        String Month = String.valueOf(LocalDateTime.now().getMonthValue());
-        String Day = String.valueOf(LocalDateTime.now().getDayOfMonth());
-        String Hour = String.valueOf(LocalDateTime.now().getHour());
-        String Minute = String.valueOf(LocalDateTime.now().getMinute());
-        String Se = String.valueOf(LocalDateTime.now().getSecond());
-        String formatedDateTime = String.format("%s-%s-%s %s:%s:%s", Year, Month, Day, Hour, Minute, Se);
-        return formatedDateTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        return localDateTime.format(formatter); // "1986-04-08 12:30"
     }
 
 }

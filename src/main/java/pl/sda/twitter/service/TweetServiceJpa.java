@@ -2,6 +2,7 @@ package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
 import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaTweetRepository;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TweetServiceJpa implements TweetService{
@@ -37,8 +39,11 @@ public class TweetServiceJpa implements TweetService{
     }
 
     @Override
-    public List<Tweet> findAllTweets(long userId) {
-        return jpaTweetRepository.findByAuthor_Id(userId);
+    public List<TweetDtoOut> findAllTweets(long userId) {
+        List<Tweet> tweets = jpaTweetRepository.findByAuthor_Id(userId);
+        return tweets.stream().map(tweet ->
+            new TweetDtoOut(tweet.getContent(), tweet.getPublishingTime())
+        ).collect(Collectors.toList());
     }
 
     public LocalDateTime now() {
