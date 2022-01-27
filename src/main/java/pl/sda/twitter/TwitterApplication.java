@@ -3,14 +3,13 @@ package pl.sda.twitter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.service.TweetService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 @SpringBootApplication
 public class TwitterApplication implements CommandLineRunner {
@@ -32,13 +31,13 @@ public class TwitterApplication implements CommandLineRunner {
                 .build();
 
 
-        TweetDto tweetDto1 = TweetDto.builder()
+        TweetDtoIn tweetDto1 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
                 .build();
 
         tweetService.add(user1, tweetDto1);
 
-        TweetDto tweetDto2 = TweetDto.builder()
+        TweetDtoIn tweetDto2 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
                 .build();
 

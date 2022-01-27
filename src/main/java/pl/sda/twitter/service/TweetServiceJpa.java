@@ -1,7 +1,7 @@
 package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
-import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
@@ -26,7 +26,7 @@ public class TweetServiceJpa implements TweetService{
 
 
     @Override
-    public Optional<Tweet> add(User user, TweetDto dto) {
+    public Optional<Tweet> add(User user, TweetDtoIn dto) {
         Tweet tweet = Tweet.builder()
                 .author(user)
                 .content(dto.getContent())

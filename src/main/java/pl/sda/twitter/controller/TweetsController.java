@@ -2,7 +2,7 @@ package pl.sda.twitter.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
@@ -32,7 +32,7 @@ public class TweetsController {
     // Karol test ...
 
     @PostMapping("/{id}")
-    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDto dto) {
+    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDtoIn dto) {
         Optional<User> byId = userRepository.findById(id);
         return ResponseEntity.ok(tweetService.add(byId.get(), dto).get());
     }
