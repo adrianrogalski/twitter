@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,11 +18,15 @@ public class Tweet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String content;
+    private int likes;
+    private int retweets;
+    @ManyToMany
+    private List<Tweet> comments;
     @ManyToMany
     private Set<Hashtag> hashtagSet;
     @ManyToOne(cascade = CascadeType.ALL)
     private User author;
-    private long respondId;
+    private long respondId = 0;
     private LocalDateTime publishingTime;
 
 }
