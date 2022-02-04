@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface JpaTweetRepository extends JpaRepository<Tweet, Long> {
-    public List<Tweet> findByAuthor_Id(long userId);
+    List<Tweet> findAllByAuthorId(long userId);
+    List<Tweet> findAllByParentTweetId(long parentTweetId);
 }

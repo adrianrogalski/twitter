@@ -1,14 +1,15 @@
 package pl.sda.twitter.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetCommentsPage;
+import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.TweetService;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +30,20 @@ public class TweetsController {
         return tweetService.findAllTweets(id);
     }
 
-    // Karol test ...
-
     @PostMapping("/{id}")
-    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDto dto) {
-        Optional<User> byId = userRepository.findById(id);
-        return ResponseEntity.ok(tweetService.add(byId.get(), dto).get());
+    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDtoIn dto) {
+        Optional<User> userById = userRepository.findById(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addNewTweet(userById.get(), dto).get());
+    }
+
+    @GetMapping("/comments/{id}")
+    public ResponseEntity<TweetCommentsPage> getComments(@PathVariable(name = "id") long parentTweetId) {
+        return ResponseEntity.of(tweetService.getTweetComments(parentTweetId));
+    }
+
+    @PostMapping("/comments/{id}")
+    public ResponseEntity<Tweet> addComment(@PathVariable(name = "id") long parentTweetId, @RequestBody TweetDtoIn dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addComment(parentTweetId, dto).get());
     }
 
 }
