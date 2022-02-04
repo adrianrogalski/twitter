@@ -3,21 +3,25 @@ package pl.sda.twitter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import pl.sda.twitter.dto.TweetDto;
+import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
+import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
+import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.TweetService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.Optional;
 
 @SpringBootApplication
 public class TwitterApplication implements CommandLineRunner {
     private final TweetService tweetService;
+    private final JpaUserRepository userRepository;
 
-    public TwitterApplication(TweetService tweetService) {
+    public TwitterApplication(TweetService tweetService, JpaUserRepository userRepository) {
         this.tweetService = tweetService;
+        this.userRepository = userRepository;
     }
 
     public static void main(String[] args) {
@@ -29,22 +33,26 @@ public class TwitterApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User user1 = User.builder()
                 .name("Jan")
+                .username("janek1234")
                 .build();
 
+        User savedUser1 = userRepository.save(user1);
+        System.out.println("Utworzono usera o id: " + user1.getId() + " oraz o nicku: " + user1.getUsername());
 
-        TweetDto tweetDto1 = TweetDto.builder()
+
+        TweetDtoIn tweetDtoIn1 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
                 .build();
 
-        tweetService.add(user1, tweetDto1);
+        Optional<Tweet> tweet1 = tweetService.addNewTweet(user1, tweetDtoIn1);
+        System.out.println("Utworzono tweeta o id: " + tweet1.get().getId());
 
-        TweetDto tweetDto2 = TweetDto.builder()
+        TweetDtoIn tweetDtoIn2 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
                 .build();
 
-        tweetService.add(user1, tweetDto2);
-
-        TweetDtoOut tweetDtoOut1 = new TweetDtoOut ("Moj post", LocalDateTime.now());
+        Optional<Tweet> tweet2 = tweetService.addNewTweet(user1, tweetDtoIn2);
+        System.out.println("Utworzono tweeta o id: " + tweet2.get().getId());
 
 
 
