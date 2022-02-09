@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     public final static int NOT_A_COMMENT_TWEET_ID = -1;
+    public final TweetMapper tweetMapper;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, TweetMapper tweetMapper) {
         this.jpaTweetRepository = jpaTweetRepository;
+        this.tweetMapper = tweetMapper;
     }
 
     @Override
@@ -71,6 +73,26 @@ public class TweetServiceJpa implements TweetService{
 
     public LocalDateTime now() {
         return LocalDateTime.now();
+    }
+
+    @Override
+    @Transactional
+    public TweetDtoOut addTweetLike(long id){
+        final Optional<Tweet> opTweet = jpaTweetRepository.findById(id);
+        Tweet tweet = opTweet.get();
+        if (opTweet.isPresent()){
+            int likes = tweet.getLikes();
+            likes++;
+            tweet.setLikes(likes);
+            jpaTweetRepository.save(tweet);
+        }
+        return TweetDtoOut.builder()
+                .content(tweet.getContent())
+                .likes(tweet.getLikes())
+                .comments(tweet.getComments())
+                .username(tweet.getUsername())
+                .publishingTime(tweetMapper.timeMapper(tweet.getPublishingTime()))
+                .build();
     }
 
 }
