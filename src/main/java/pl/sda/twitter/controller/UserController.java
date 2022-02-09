@@ -1,19 +1,15 @@
 package pl.sda.twitter.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import pl.sda.twitter.dto.Login;
-import pl.sda.twitter.dto.TweetCommentsPage;
+import org.springframework.web.bind.annotation.*;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.dto.UserDtoOut;
-import pl.sda.twitter.model.User;
+import pl.sda.twitter.dto.UserLoginForm;
 import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -32,5 +28,10 @@ public class UserController {
         return userService.findAllUsersContainingWords(word);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDtoOut> loginUser(@RequestBody UserLoginForm login){
+        Optional<UserDtoOut> userDtoOut = userService.UserLogin(login);
+      return  ResponseEntity.of(userDtoOut);
+    }
 
 }

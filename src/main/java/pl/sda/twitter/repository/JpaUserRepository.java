@@ -5,8 +5,10 @@ import org.springframework.stereotype.Repository;
 import pl.sda.twitter.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface JpaUserRepository extends JpaRepository<User, Long> {
     List<User> findUsersByUsernameContaining(String word);
+    Optional<User> findUserByUsername(String username);
 }

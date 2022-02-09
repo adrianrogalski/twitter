@@ -1,13 +1,9 @@
 package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
-import pl.sda.twitter.dto.Login;
-import pl.sda.twitter.dto.TweetCommentsPage;
-import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.dto.UserDtoOut;
-import pl.sda.twitter.mapper.TweetMapper;
+import pl.sda.twitter.dto.UserLoginForm;
 import pl.sda.twitter.mapper.UserMapper;
-import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaUserRepository;
 
@@ -31,5 +27,17 @@ public class UserServiceJpa implements UserService{
         return usersByWord.stream().map(user ->
                 UserMapper.mapToUserDtoOut(user)
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<UserDtoOut> UserLogin(UserLoginForm login) {
+        Optional<User> userByUsername = jpaUserRepository.findUserByUsername(login.getUsername());
+        if (userByUsername.isPresent()){
+            User user = userByUsername.get();
+            if (login.getPassword().equals(user.getPassword())){
+                return Optional.of(UserMapper.mapToUserDtoOut(user));
+            }
+        }
+        return Optional.empty();
     }
 }
