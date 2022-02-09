@@ -11,6 +11,7 @@ import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaUserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,13 +25,11 @@ public class UserServiceJpa implements UserService{
     }
 
     @Override
+    @Transactional
     public List<UserDtoOut> findAllUsersContainingWords(String word) {
         List<User> usersByWord = jpaUserRepository.findUsersByUsernameContaining(word);
         return usersByWord.stream().map(user ->
                 UserMapper.mapToUserDtoOut(user)
         ).collect(Collectors.toList());
     }
-
-
-
 }
