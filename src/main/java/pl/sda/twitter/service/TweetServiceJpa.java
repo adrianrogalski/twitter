@@ -86,13 +86,7 @@ public class TweetServiceJpa implements TweetService{
             tweet.setLikes(likes);
             jpaTweetRepository.save(tweet);
         }
-        return TweetDtoOut.builder()
-                .content(tweet.getContent())
-                .likes(tweet.getLikes())
-                .comments(tweet.getComments())
-                .username(tweet.getUsername())
-                .publishingTime(tweetMapper.timeMapper(tweet.getPublishingTime()))
-                .build();
+        return TweetMapper.mapToTweetDtoOut(tweet);
     }
 
 }
