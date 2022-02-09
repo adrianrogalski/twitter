@@ -1,5 +1,7 @@
 package pl.sda.twitter.mapper;
 
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
@@ -7,6 +9,7 @@ import pl.sda.twitter.model.Tweet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class TweetMapper {
 
     static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
@@ -31,7 +34,7 @@ public class TweetMapper {
                 .build();
     }
 
-    private static String timeMapper(LocalDateTime localDateTime){
+    public static String timeMapper(LocalDateTime localDateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return localDateTime.format(formatter); // "1986-04-08 12:30"
     }
