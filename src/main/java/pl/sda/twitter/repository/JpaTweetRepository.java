@@ -10,4 +10,6 @@ import java.util.List;
 public interface JpaTweetRepository extends JpaRepository<Tweet, Long> {
     List<Tweet> findAllByAuthorId(long userId);
     List<Tweet> findAllByParentTweetId(long parentTweetId);
+    List<Tweet> findAllByContentIsContaining(String word);
 }
+

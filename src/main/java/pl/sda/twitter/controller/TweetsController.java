@@ -46,6 +46,10 @@ public class TweetsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addComment(parentTweetId, dto).get());
     }
 
+    @GetMapping("/search/tweet/{word}")
+    public List<TweetDtoOut> findTweetsByWord(@PathVariable String word) {
+        return tweetService.findAllTweetsContainingWords(word);
+    }
     @PostMapping("/tweet/like/{id}")
     public ResponseEntity<TweetDtoOut> addTweetLike(@PathVariable long id) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addTweetLike(id));
