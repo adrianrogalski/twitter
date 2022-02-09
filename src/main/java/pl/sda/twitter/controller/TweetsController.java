@@ -46,4 +46,9 @@ public class TweetsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addComment(parentTweetId, dto).get());
     }
 
+    @PostMapping("/tweet/like/{id}")
+    public ResponseEntity<TweetDtoOut> addTweetLike(@PathVariable long id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addTweetLike(id));
+    }
+
 }
