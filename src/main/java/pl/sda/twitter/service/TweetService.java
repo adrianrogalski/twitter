@@ -16,8 +16,5 @@ public interface TweetService {
     List<TweetDtoOut> findAllTweets(long userId);
     Optional<TweetCommentsPage> getTweetComments(long parentTweetId);
     Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn);
-
-
-    @Transactional
     TweetDtoOut addTweetLike(long id);
 }

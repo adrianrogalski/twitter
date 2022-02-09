@@ -1,5 +1,6 @@
 package pl.sda.twitter.mapper;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
@@ -8,7 +9,7 @@ import pl.sda.twitter.model.Tweet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Service
+@Component
 public class TweetMapper {
 
     static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
