@@ -18,11 +18,9 @@ import java.util.stream.Collectors;
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     public final static int NOT_A_COMMENT_TWEET_ID = -1;
-    public final TweetMapper tweetMapper;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, TweetMapper tweetMapper) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository) {
         this.jpaTweetRepository = jpaTweetRepository;
-        this.tweetMapper = tweetMapper;
     }
 
     @Override

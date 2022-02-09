@@ -9,7 +9,6 @@ import pl.sda.twitter.model.Tweet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
 public class TweetMapper {
 
     static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
