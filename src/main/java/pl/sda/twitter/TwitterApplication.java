@@ -34,6 +34,7 @@ public class TwitterApplication implements CommandLineRunner {
         User user1 = User.builder()
                 .name("Jan")
                 .username("janek1234")
+                .password("1234")
                 .build();
 
         User savedUser1 = userRepository.save(user1);
@@ -42,6 +43,7 @@ public class TwitterApplication implements CommandLineRunner {
         User user2 = User.builder()
                 .name("Damian")
                 .username("damian1234")
+                .password("5678")
                 .build();
 
         User savedUser2 = userRepository.save(user2);
@@ -88,6 +90,20 @@ public class TwitterApplication implements CommandLineRunner {
 
         Optional<Tweet> tweet6 = tweetService.addNewTweet(user1, tweetDtoIn6);
         System.out.println("Utworzono tweeta o id: " + tweet6.get().getId());
+
+        TweetDtoIn tweetDtoIn7 = TweetDtoIn.builder()
+                .content("#jobs")
+                .build();
+
+        Optional<Tweet> tweet7 = tweetService.addNewTweet(user2, tweetDtoIn7);
+        System.out.println("Utworzono tweeta o id: " + tweet7.get().getId());
+
+        TweetDtoIn tweetDtoIn8 = TweetDtoIn.builder()
+                .content("#musk")
+                .build();
+
+        Optional<Tweet> tweet8 = tweetService.addNewTweet(user1, tweetDtoIn8);
+        System.out.println("Utworzono tweeta o id: " + tweet8.get().getId());
 
 
     }
