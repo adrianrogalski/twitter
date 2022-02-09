@@ -75,6 +75,8 @@ public class TweetServiceJpa implements TweetService{
         return LocalDateTime.now();
     }
 
+    @Override
+    @Transactional
     public List<TweetDtoOut> findAllTweetsContainingWords(String word) {
         List<Tweet> tweetsByWord = jpaTweetRepository.findAllByContentIsContaining(word);
         return tweetsByWord.stream().map(tweet ->
@@ -82,7 +84,7 @@ public class TweetServiceJpa implements TweetService{
         ).collect(Collectors.toList());
     }
 
-}
+
     @Override
     @Transactional
     public TweetDtoOut addTweetLike(long id){
