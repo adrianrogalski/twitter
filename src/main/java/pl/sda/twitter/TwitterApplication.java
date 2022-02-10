@@ -14,6 +14,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+
+
 @SpringBootApplication
 public class TwitterApplication implements CommandLineRunner {
     private final TweetService tweetService;
@@ -105,6 +107,12 @@ public class TwitterApplication implements CommandLineRunner {
         Optional<Tweet> tweet8 = tweetService.addNewTweet(user1, tweetDtoIn8);
         System.out.println("Utworzono tweeta o id: " + tweet8.get().getId());
 
+        TweetDtoIn tweetDtoIn9 = TweetDtoIn.builder()
+                .content("#musk to szef spacex")
+                .build();
 
+        Optional<Tweet> tweet9 = tweetService.addNewTweet(user2, tweetDtoIn9);
+        System.out.println("Utworzono tweeta o id: " + tweet9.get().getId());
     }
 }
+
