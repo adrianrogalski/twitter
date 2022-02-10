@@ -24,5 +24,4 @@ public class Tweet {
     private int retweets;
     private int comments;
     private LocalDateTime publishingTime;
-
 }
