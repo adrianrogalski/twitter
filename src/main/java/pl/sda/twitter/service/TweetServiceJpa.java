@@ -1,10 +1,12 @@
 package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
+import pl.sda.twitter.dto.HashtagDto;
 import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.mapper.TweetMapper;
+import pl.sda.twitter.mapper.UserMapper;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaTweetRepository;
@@ -18,9 +20,11 @@ import java.util.stream.Collectors;
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     public final static int NOT_A_COMMENT_TWEET_ID = -1;
+    public final TweetMapper tweetMapper;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, TweetMapper tweetMapper) {
         this.jpaTweetRepository = jpaTweetRepository;
+        this.tweetMapper = tweetMapper;
     }
 
     @Override
@@ -73,4 +77,27 @@ public class TweetServiceJpa implements TweetService{
         return LocalDateTime.now();
     }
 
+    @Override
+    @Transactional
+    public List<TweetDtoOut> findAllTweetsContainingWords(String word) {
+        List<Tweet> tweetsByWord = jpaTweetRepository.findAllByContentIsContaining(word);
+        return tweetsByWord.stream().map(tweet ->
+                TweetMapper.mapToTweetDtoOut(tweet)
+        ).collect(Collectors.toList());
+    }
+
+
+    @Override
+    @Transactional
+    public TweetDtoOut addTweetLike(long id){
+        final Optional<Tweet> opTweet = jpaTweetRepository.findById(id);
+        Tweet tweet = opTweet.get();
+        if (opTweet.isPresent()){
+            int likes = tweet.getLikes();
+            likes++;
+            tweet.setLikes(likes);
+            jpaTweetRepository.save(tweet);
+        }
+        return TweetMapper.mapToTweetDtoOut(tweet);
+    }
 }
