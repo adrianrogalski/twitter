@@ -60,6 +60,14 @@ public class TweetServiceJpa implements TweetService{
     }
 
     @Override
+    public List<TweetDtoOut> findAllTweetsByUsername(String username) {
+        List<Tweet> tweets = jpaTweetRepository.findAllByUsername(username);
+        return tweets.stream().map(tweet ->
+                TweetMapper.mapToTweetDtoOut(tweet)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public Optional<TweetCommentsPage> getTweetComments(long parentTweetId) {
         Tweet tweet = jpaTweetRepository.getById(parentTweetId);

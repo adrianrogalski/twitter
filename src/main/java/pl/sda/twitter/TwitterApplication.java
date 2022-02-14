@@ -35,6 +35,7 @@ public class TwitterApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User user1 = User.builder()
                 .name("Jan")
+                .surname("Jumbo")
                 .username("janek1234")
                 .password("1234")
                 .build();
@@ -44,6 +45,7 @@ public class TwitterApplication implements CommandLineRunner {
 
         User user2 = User.builder()
                 .name("Damian")
+                .surname("Damiano")
                 .username("damian1234")
                 .password("5678")
                 .build();

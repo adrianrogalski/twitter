@@ -14,6 +14,7 @@ public class TweetMapper {
 
     static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
         return TweetDtoOut.builder()
+                .id(tweet.getId())
                 .content(tweet.getContent())
                 .comments(tweet.getComments())
                 .likes(tweet.getLikes())
