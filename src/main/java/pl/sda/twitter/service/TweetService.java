@@ -4,6 +4,7 @@ package pl.sda.twitter.service;
 import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
+import pl.sda.twitter.model.Hashtag;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 

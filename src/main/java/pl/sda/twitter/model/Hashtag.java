@@ -2,10 +2,7 @@ package pl.sda.twitter.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
@@ -18,5 +15,6 @@ public class Hashtag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String label;
-    private int usersUsage;
+    @ManyToOne
+    private Tweet tweet;
 }

@@ -4,24 +4,26 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import pl.sda.twitter.dto.TweetDtoIn;
-import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaUserRepository;
+import pl.sda.twitter.service.HashtagService;
 import pl.sda.twitter.service.TweetService;
+import pl.sda.twitter.util.HashtagExtractor;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @SpringBootApplication
 public class TwitterApplication implements CommandLineRunner {
     private final TweetService tweetService;
     private final JpaUserRepository userRepository;
+    private final HashtagService hashtagService;
 
-    public TwitterApplication(TweetService tweetService, JpaUserRepository userRepository) {
+    public TwitterApplication(TweetService tweetService, JpaUserRepository userRepository, HashtagService hashtagService) {
         this.tweetService = tweetService;
         this.userRepository = userRepository;
+        this.hashtagService = hashtagService;
     }
 
     public static void main(String[] args) {
@@ -99,12 +101,17 @@ public class TwitterApplication implements CommandLineRunner {
         System.out.println("Utworzono tweeta o id: " + tweet7.get().getId());
 
         TweetDtoIn tweetDtoIn8 = TweetDtoIn.builder()
-                .content("#musk")
+                .content("#musk sdkasfjd #hello")
                 .build();
 
         Optional<Tweet> tweet8 = tweetService.addNewTweet(user1, tweetDtoIn8);
         System.out.println("Utworzono tweeta o id: " + tweet8.get().getId());
 
+        System.out.println("test wyciagania hashtagow z tweeta nr.8: ");
+        HashtagExtractor.extractHashtagStrings(tweet8.get()).forEach(System.out::println);
+        hashtagService.findAll().forEach(System.out::println);
+        System.out.println("Popular");
+        hashtagService.getPopularHashtags().forEach(System.out::println);
 
     }
 }
