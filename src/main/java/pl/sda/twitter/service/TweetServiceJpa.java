@@ -5,38 +5,50 @@ import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.mapper.TweetMapper;
+import pl.sda.twitter.model.Hashtag;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
+import pl.sda.twitter.repository.JpaHashtagRepository;
 import pl.sda.twitter.repository.JpaTweetRepository;
+import pl.sda.twitter.util.HashtagExtractor;
+
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
-    public final static int NOT_A_COMMENT_TWEET_ID = -1;
+    private final JpaHashtagRepository jpaHashtagRepository;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository) {
         this.jpaTweetRepository = jpaTweetRepository;
+        this.jpaHashtagRepository = jpaHashtagRepository;
     }
 
     @Override
     @Transactional
     public Optional<Tweet> addNewTweet(User user, TweetDtoIn dto) {
-        Tweet tweet = Tweet.builder()
-                .authorId(user.getId())
-                .username(user.getUsername())
-                .content(dto.getContent())
-                .publishingTime(now())
-                .retweets(0)
-                .likes(0)
-                .parentTweetId(NOT_A_COMMENT_TWEET_ID)
-                .build();
-        Tweet savedTweet = jpaTweetRepository.save(tweet);
+        Tweet savedTweet = saveTweetIntoRepo(dto, -1);
         return Optional.ofNullable(savedTweet);
+    }
+
+    @Transactional
+    public Tweet saveTweetIntoRepo(TweetDtoIn dto, long parentTweetId) {
+        Tweet tweet = TweetMapper.mapToTweet(dto);
+        List<String> strings = HashtagExtractor.extractHashtagStrings(tweet);
+        for (String hashtagString : strings) {
+            Hashtag hashtag = Hashtag.builder()
+                    .tweet(tweet)
+                    .label(hashtagString.toUpperCase(Locale.ROOT))
+                    .build();
+            jpaHashtagRepository.save(hashtag);
+        }
+        Tweet savedTweet = jpaTweetRepository.save(tweet);
+        return savedTweet;
     }
 
     @Override
@@ -71,10 +83,8 @@ public class TweetServiceJpa implements TweetService{
     @Override
     @Transactional
     public Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn) {
-        Tweet commentTweet = TweetMapper.mapToTweet(tweetDtoIn);
-        commentTweet.setParentTweetId(parentTweetId);
-        Tweet savedTweetComment = jpaTweetRepository.save(commentTweet);
-        return Optional.ofNullable(savedTweetComment);
+        Tweet commentTweet = saveTweetIntoRepo(tweetDtoIn, parentTweetId);
+        return Optional.ofNullable(commentTweet);
     }
 
     public LocalDateTime now() {
