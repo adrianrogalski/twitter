@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

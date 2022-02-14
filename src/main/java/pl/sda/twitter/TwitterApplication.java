@@ -33,6 +33,7 @@ public class TwitterApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User user1 = User.builder()
                 .name("Jan")
+                .surname("Jumbo")
                 .username("janek1234")
                 .password("1234")
                 .build();
@@ -42,6 +43,7 @@ public class TwitterApplication implements CommandLineRunner {
 
         User user2 = User.builder()
                 .name("Damian")
+                .surname("Bumbo")
                 .username("damian1234")
                 .password("5678")
                 .build();
@@ -104,6 +106,14 @@ public class TwitterApplication implements CommandLineRunner {
 
         Optional<Tweet> tweet8 = tweetService.addNewTweet(user1, tweetDtoIn8);
         System.out.println("Utworzono tweeta o id: " + tweet8.get().getId());
+
+        System.out.println(tweet1);
+        System.out.println(tweet2);
+        System.out.println(tweet3);
+        System.out.println(tweet4);
+        System.out.println(tweet5);
+        System.out.println(tweet6);
+        System.out.println(tweet7);
 
 
     }

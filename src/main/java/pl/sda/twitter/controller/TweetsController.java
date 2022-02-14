@@ -22,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TweetsController {
     private final TweetService tweetService;
     private final JpaUserRepository userRepository;
@@ -32,9 +33,13 @@ public class TweetsController {
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:4200")
     public List<TweetDtoOut> findTweetsByUser(@PathVariable long id) {
         return tweetService.findAllTweets(id);
+    }
+
+    @GetMapping("/user/{username}")
+    public List<TweetDtoOut> findTweetsByUsername(@PathVariable String username) {
+        return tweetService.findAllTweetsByUsername(username);
     }
 
     @PostMapping("/{id}")

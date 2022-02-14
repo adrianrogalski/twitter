@@ -15,6 +15,9 @@ import java.util.Optional;
 public interface TweetService {
     Optional<Tweet> addNewTweet(User user, TweetDtoIn dto);
     List<TweetDtoOut> findAllTweets(long userId);
+
+    List<TweetDtoOut> findAllTweetsByUsername(String username);
+
     Optional<TweetCommentsPage> getTweetComments(long parentTweetId);
     Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn);
     List<TweetDtoOut> findAllTweetsContainingWords(String word);

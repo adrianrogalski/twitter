@@ -14,6 +14,7 @@ public class UserMapper {
                 .username(user.getUsername())
                 .id(user.getId())
                 .name(user.getName())
+                .surname(user.getSurname())
                 .build();
     }
     static public User mapToUser(UserDtoIn dtoIn) {

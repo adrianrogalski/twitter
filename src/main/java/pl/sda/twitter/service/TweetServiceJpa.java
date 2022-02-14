@@ -1,8 +1,6 @@
 package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
@@ -11,9 +9,7 @@ import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaTweetRepository;
 import javax.transaction.Transactional;
-import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +44,14 @@ public class TweetServiceJpa implements TweetService{
         List<Tweet> tweets = jpaTweetRepository.findAllByAuthorId(userId);
         return tweets.stream().map(tweet ->
             TweetMapper.mapToTweetDtoOut(tweet)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TweetDtoOut> findAllTweetsByUsername(String username) {
+        List<Tweet> tweets = jpaTweetRepository.findAllByUsername(username);
+        return tweets.stream().map(tweet ->
+                TweetMapper.mapToTweetDtoOut(tweet)
         ).collect(Collectors.toList());
     }
 
