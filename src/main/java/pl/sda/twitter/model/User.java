@@ -17,6 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+    private String surname;
     private String username;
     private String password;
     //@OneToMany

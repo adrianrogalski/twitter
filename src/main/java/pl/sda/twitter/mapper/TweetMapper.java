@@ -9,11 +9,12 @@ import pl.sda.twitter.model.Tweet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Component
 public class TweetMapper {
+    public final static int NOT_A_COMMENT_TWEET_ID = -1;
 
     static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
         return TweetDtoOut.builder()
+                .id(tweet.getId())
                 .content(tweet.getContent())
                 .comments(tweet.getComments())
                 .likes(tweet.getLikes())
@@ -29,7 +30,7 @@ public class TweetMapper {
                 .likes(0)
                 .comments(0)
                 .retweets(0)
-                .parentTweetId(-1)
+                .parentTweetId(NOT_A_COMMENT_TWEET_ID)
                 .authorId(dtoIn.getAuthor())
                 .build();
     }

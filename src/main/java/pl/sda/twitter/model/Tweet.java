@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +25,4 @@ public class Tweet {
     private int retweets;
     private int comments;
     private LocalDateTime publishingTime;
-
 }
