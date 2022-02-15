@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
+@ToString
 public class Hashtag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

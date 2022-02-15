@@ -36,8 +36,13 @@ public class TweetMapper {
     }
 
     public static String timeMapper(LocalDateTime localDateTime){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        return localDateTime.format(formatter); // "1986-04-08 12:30"
+        if(localDateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            return localDateTime.format(formatter); // "1986-04-08 12:30"
+        } else {
+            return "";
+        }
+
     }
 
 

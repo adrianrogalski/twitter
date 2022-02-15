@@ -10,6 +10,7 @@ import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaHashtagRepository;
 import pl.sda.twitter.repository.JpaTweetRepository;
+import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.util.HashtagExtractor;
 
 import javax.transaction.Transactional;
@@ -23,22 +24,26 @@ import java.util.stream.Collectors;
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     private final JpaHashtagRepository jpaHashtagRepository;
+    private final JpaUserRepository jpaUserRepository;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository, JpaUserRepository jpaUserRepository) {
         this.jpaTweetRepository = jpaTweetRepository;
         this.jpaHashtagRepository = jpaHashtagRepository;
+        this.jpaUserRepository = jpaUserRepository;
     }
 
     @Override
     @Transactional
     public Optional<Tweet> addNewTweet(User user, TweetDtoIn dto) {
-        Tweet savedTweet = saveTweetIntoRepo(dto, -1);
+        Tweet savedTweet = saveTweetIntoRepo(dto, -1, user);
+        savedTweet.setUsername(user.getUsername());
         return Optional.ofNullable(savedTweet);
     }
 
     @Transactional
-    public Tweet saveTweetIntoRepo(TweetDtoIn dto, long parentTweetId) {
+    public Tweet saveTweetIntoRepo(TweetDtoIn dto, long parentTweetId, User user) {
         Tweet tweet = TweetMapper.mapToTweet(dto);
+        tweet.setUsername(user.getUsername());
         List<String> strings = HashtagExtractor.extractHashtagStrings(tweet);
         for (String hashtagString : strings) {
             Hashtag hashtag = Hashtag.builder()
@@ -62,9 +67,7 @@ public class TweetServiceJpa implements TweetService{
     @Override
     public List<TweetDtoOut> findAllTweetsByUsername(String username) {
         List<Tweet> tweets = jpaTweetRepository.findAllByUsername(username);
-        return tweets.stream().map(tweet ->
-                TweetMapper.mapToTweetDtoOut(tweet)
-        ).collect(Collectors.toList());
+        return tweets.stream().map(TweetMapper::mapToTweetDtoOut).collect(Collectors.toList());
     }
 
     @Override
@@ -83,7 +86,8 @@ public class TweetServiceJpa implements TweetService{
     @Override
     @Transactional
     public Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn) {
-        Tweet commentTweet = saveTweetIntoRepo(tweetDtoIn, parentTweetId);
+        Tweet parentTweet = jpaTweetRepository.getById(parentTweetId);
+        Tweet commentTweet = saveTweetIntoRepo(tweetDtoIn, parentTweetId, jpaUserRepository.findUserByUsername(parentTweet.getUsername()).get());
         return Optional.ofNullable(commentTweet);
     }
 
