@@ -39,6 +39,4 @@ public class TweetMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return localDateTime.format(formatter); // "1986-04-08 12:30"
     }
-
-
 }

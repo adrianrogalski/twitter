@@ -94,4 +94,9 @@ public class TweetsController {
         return "File uploaded!";
     }
 
+    @DeleteMapping("/tweet/{id}")
+    public void delete(@PathVariable long id){
+        tweetService.deleteTweetById(id);
+    }
+
 }

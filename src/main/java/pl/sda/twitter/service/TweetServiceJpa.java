@@ -115,4 +115,9 @@ public class TweetServiceJpa implements TweetService{
         return TweetMapper.mapToTweetDtoOut(tweet);
     }
 
+    @Override
+    public void deleteTweetById(long id) {
+        jpaTweetRepository.deleteById(id);
+    }
+
 }
