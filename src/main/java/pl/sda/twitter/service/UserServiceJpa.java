@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceJpa implements UserService{
+public class UserServiceJpa implements UserService {
     private final JpaUserRepository jpaUserRepository;
 
     public UserServiceJpa(JpaUserRepository jpaUserRepository) {
