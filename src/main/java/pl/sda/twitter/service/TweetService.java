@@ -23,4 +23,5 @@ public interface TweetService {
     Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn);
     List<TweetDtoOut> findAllTweetsContainingWords(String word);
     TweetDtoOut addTweetLike(long id);
+    void deleteTweetById(long id);
 }
