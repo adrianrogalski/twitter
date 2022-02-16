@@ -1,15 +1,14 @@
 package pl.sda.twitter.service;
 
 import org.springframework.stereotype.Service;
-import pl.sda.twitter.dto.HashtagDto;
 import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.mapper.TweetMapper;
-import pl.sda.twitter.mapper.UserMapper;
 import pl.sda.twitter.model.Hashtag;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
+import pl.sda.twitter.repository.JpaBookmarkRepository;
 import pl.sda.twitter.repository.JpaHashtagRepository;
 import pl.sda.twitter.repository.JpaTweetRepository;
 import pl.sda.twitter.util.HashtagExtractor;
@@ -25,10 +24,12 @@ import java.util.stream.Collectors;
 public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     private final JpaHashtagRepository jpaHashtagRepository;
+    private final JpaBookmarkRepository jpaBookmarkRepository;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository, JpaBookmarkRepository jpaBookmarkRepository) {
         this.jpaTweetRepository = jpaTweetRepository;
         this.jpaHashtagRepository = jpaHashtagRepository;
+        this.jpaBookmarkRepository = jpaBookmarkRepository;
     }
 
     @Override
@@ -115,6 +116,19 @@ public class TweetServiceJpa implements TweetService{
             jpaTweetRepository.save(tweet);
         }
         return TweetMapper.mapToTweetDtoOut(tweet);
+    }
+
+    @Override
+    public Optional<Tweet> addBookmark(User user, TweetDtoIn tweet) {
+        Tweet bookmark = TweetMapper.mapToTweet(tweet);
+        Tweet savedBookmark = jpaBookmarkRepository.save(bookmark);
+        return Optional.ofNullable(savedBookmark);
+    }
+
+    @Override
+    public List<Tweet> findAllBookmarks() {
+        List<Tweet> bookmarks = jpaBookmarkRepository.findAll();
+        return bookmarks;
     }
 
 }

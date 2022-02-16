@@ -122,6 +122,8 @@ public class TwitterApplication implements CommandLineRunner {
 
         Optional<Tweet> tweet9 = tweetService.addNewTweet(user2, tweetDtoIn9);
         System.out.println("Utworzono tweeta o id: " + tweet9.get().getId());
+
+        tweetService.addBookmark(user1,tweetDtoIn1);
     }
 }
 

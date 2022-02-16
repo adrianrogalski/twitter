@@ -11,6 +11,7 @@ import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
+import pl.sda.twitter.repository.JpaBookmarkRepository;
 import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.TweetService;
 
@@ -26,10 +27,12 @@ import java.util.Optional;
 public class TweetsController {
     private final TweetService tweetService;
     private final JpaUserRepository userRepository;
+    private final JpaBookmarkRepository bookmarkRepository;
 
-    public TweetsController(TweetService tweetService, JpaUserRepository userRepository) {
+    public TweetsController(TweetService tweetService, JpaUserRepository userRepository, JpaBookmarkRepository bookmarkRepository) {
         this.tweetService = tweetService;
         this.userRepository = userRepository;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     @GetMapping("/{id}")
@@ -96,4 +99,13 @@ public class TweetsController {
         return "File uploaded!";
     }
 
+    @PostMapping("/bookmark/{id}")
+    ResponseEntity<Tweet> addBookmark(@PathVariable long id, @RequestBody TweetDtoIn dto) {
+        Optional<User> userById = userRepository.findById(id);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addBookmark(userById.get(), dto).get());
+    }
+    @GetMapping("/bookmarklist")
+    public List<Tweet> findBookmarks() {
+        return tweetService.findAllBookmarks();
+    }
 }

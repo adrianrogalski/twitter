@@ -1,5 +1,6 @@
 package pl.sda.twitter.mapper;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import pl.sda.twitter.dto.TweetDtoIn;
@@ -12,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 public class TweetMapper {
     public final static int NOT_A_COMMENT_TWEET_ID = -1;
 
-    static public TweetDtoOut mapToTweetDtoOut(Tweet tweet) {
+    static public TweetDtoOut mapToTweetDtoOut(@NotNull Tweet tweet) {
         return TweetDtoOut.builder()
                 .id(tweet.getId())
                 .content(tweet.getContent())
