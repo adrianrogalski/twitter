@@ -36,22 +36,22 @@ public class TwitterApplication implements CommandLineRunner {
         User user1 = User.builder()
                 .name("Jan")
                 .surname("Jumbo")
-                .username("janek1234")
-                .password("1234")
+                .username("jan")
+                .password("$2a$12$xyKIti7SOmJngrj3ZpcsKusZ4MF5G3/K0miPTX6isJj1rn9uFyGVy")
                 .build();
 
         User savedUser1 = userRepository.save(user1);
-        System.out.println("Utworzono usera o id: " + user1.getId() + " oraz o nicku: " + user1.getUsername());
+        System.out.println("Utworzono usera o id: " + savedUser1.getId() + " oraz o nicku: " + user1.getUsername());
 
         User user2 = User.builder()
                 .name("Damian")
                 .surname("Damiano")
                 .username("damian1234")
-                .password("5678")
+                .password("$2a$12$xyKIti7SOmJngrj3ZpcsKusZ4MF5G3/K0miPTX6isJj1rn9uFyGVy")
                 .build();
 
         User savedUser2 = userRepository.save(user2);
-        System.out.println("Utworzono usera o id: " + user2.getId() + " oraz o nicku: " + user2.getUsername());
+        System.out.println("Utworzono usera o id: " + savedUser2.getId() + " oraz o nicku: " + user2.getUsername());
 
         TweetDtoIn tweetDtoIn1 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
