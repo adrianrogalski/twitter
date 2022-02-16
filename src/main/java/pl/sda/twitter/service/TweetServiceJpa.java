@@ -47,6 +47,7 @@ public class TweetServiceJpa implements TweetService{
     public Tweet saveTweetIntoRepo(TweetDtoIn dto, long parentTweetId, User user) {
         Tweet tweet = TweetMapper.mapToTweet(dto);
         tweet.setUsername(user.getUsername());
+        tweet.setParentTweetId(parentTweetId);
         List<String> strings = HashtagExtractor.extractHashtagStrings(tweet);
         for (String hashtagString : strings) {
             Hashtag hashtag = Hashtag.builder()
@@ -90,7 +91,9 @@ public class TweetServiceJpa implements TweetService{
     @Transactional
     public Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn) {
         Tweet parentTweet = jpaTweetRepository.getById(parentTweetId);
+        System.out.println(parentTweet);
         Tweet commentTweet = saveTweetIntoRepo(tweetDtoIn, parentTweetId, jpaUserRepository.findUserByUsername(parentTweet.getUsername()).get());
+        System.out.println(commentTweet);
         return Optional.ofNullable(commentTweet);
     }
 

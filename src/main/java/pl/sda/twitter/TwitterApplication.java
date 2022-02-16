@@ -45,6 +45,7 @@ public class TwitterApplication implements CommandLineRunner {
 
         User user2 = User.builder()
                 .name("Damian")
+                .id(2)
                 .surname("Damiano")
                 .username("damian1234")
                 .password("$2a$12$xyKIti7SOmJngrj3ZpcsKusZ4MF5G3/K0miPTX6isJj1rn9uFyGVy")
@@ -55,6 +56,7 @@ public class TwitterApplication implements CommandLineRunner {
 
         TweetDtoIn tweetDtoIn1 = TweetDtoIn.builder()
                 .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
+                .author(savedUser1.getId())
                 .build();
 
         Optional<Tweet> tweet1 = tweetService.addNewTweet(user1, tweetDtoIn1);
@@ -117,5 +119,11 @@ public class TwitterApplication implements CommandLineRunner {
 
         tweetService.addBookmark(user1,tweetDtoIn1);
         System.out.println("Dodano zakładke");
+
+        tweetService.addComment(1,tweetDtoIn2);
+        tweetService.addComment(1,tweetDtoIn2);
+
+
+        System.out.println(tweetService.getTweetComments(1));
     }
 }
