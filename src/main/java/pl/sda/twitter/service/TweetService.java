@@ -24,4 +24,6 @@ public interface TweetService {
     List<TweetDtoOut> findAllTweetsContainingWords(String word);
     TweetDtoOut addTweetLike(long id);
     void deleteTweetById(long id);
+    Optional<Tweet> addBookmark(User user, TweetDtoIn tweet);
+    List<Tweet> findAllBookmarks();
 }

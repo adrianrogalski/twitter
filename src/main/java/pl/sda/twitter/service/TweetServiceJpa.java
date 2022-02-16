@@ -8,6 +8,7 @@ import pl.sda.twitter.mapper.TweetMapper;
 import pl.sda.twitter.model.Hashtag;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
+import pl.sda.twitter.repository.JpaBookmarkRepository;
 import pl.sda.twitter.repository.JpaHashtagRepository;
 import pl.sda.twitter.repository.JpaTweetRepository;
 import pl.sda.twitter.repository.JpaUserRepository;
@@ -25,11 +26,13 @@ public class TweetServiceJpa implements TweetService{
     private final JpaTweetRepository jpaTweetRepository;
     private final JpaHashtagRepository jpaHashtagRepository;
     private final JpaUserRepository jpaUserRepository;
+    private final JpaBookmarkRepository jpaBookmarkRepository;
 
-    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository, JpaUserRepository jpaUserRepository) {
+    public TweetServiceJpa(JpaTweetRepository jpaTweetRepository, JpaHashtagRepository jpaHashtagRepository, JpaUserRepository jpaUserRepository, JpaBookmarkRepository jpaBookmarkRepository) {
         this.jpaTweetRepository = jpaTweetRepository;
         this.jpaHashtagRepository = jpaHashtagRepository;
         this.jpaUserRepository = jpaUserRepository;
+        this.jpaBookmarkRepository = jpaBookmarkRepository;
     }
 
     @Override
@@ -124,4 +127,16 @@ public class TweetServiceJpa implements TweetService{
         jpaTweetRepository.deleteById(id);
     }
 
+    @Override
+    public Optional<Tweet> addBookmark (User user, TweetDtoIn tweet){
+        Tweet bookmark = TweetMapper.mapToTweet(tweet);
+        Tweet savedBookmark = jpaBookmarkRepository.save(bookmark);
+        return Optional.ofNullable(savedBookmark);
+    }
+
+    @Override
+    public List<Tweet> findAllBookmarks () {
+        List<Tweet> bookmarks = jpaBookmarkRepository.findAll();
+        return bookmarks;
+    }
 }
