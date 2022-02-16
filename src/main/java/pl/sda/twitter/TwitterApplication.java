@@ -115,5 +115,7 @@ public class TwitterApplication implements CommandLineRunner {
         System.out.println("Popular");
         hashtagService.getPopularHashtags().forEach(System.out::println);
 
+        tweetService.addBookmark(user1,tweetDtoIn1);
+        System.out.println("Dodano zakładke");
     }
 }
