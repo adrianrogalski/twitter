@@ -148,12 +148,16 @@ public class TweetServiceJpa implements TweetService {
         bookmark.setParentTweetId(jpaUserRepository.findUserByUsername(user.getUsername()).get().getId());
 
         Tweet savedBookmark = jpaBookmarkRepository.save(bookmark);
+
+
+
         return Optional.ofNullable(savedBookmark);
     }
 
     @Override
     public List<Tweet> findAllBookmarks() {
         List<Tweet> bookmarks = jpaBookmarkRepository.findAll();
+        System.out.println(bookmarks.size());
         return bookmarks;
     }
 

@@ -12,5 +12,6 @@ public interface JpaTweetRepository extends JpaRepository<Tweet, Long> {
     List<Tweet> findAllByUsername(String username);
     List<Tweet> findAllByParentTweetId(long parentTweetId);
     List<Tweet> findAllByContentIsContaining(String word);
+//    Tweet findById(long id);
 }
 

@@ -4,14 +4,20 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.sda.twitter.dto.TweetCommentsPage;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.dto.TweetDtoOut;
+//import pl.sda.twitter.model.Notification;
+import pl.sda.twitter.model.Notification_;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaBookmarkRepository;
+//import pl.sda.twitter.repository.JpaNotificationsRepository;
+import pl.sda.twitter.repository.JpaNotificationsRepository;
+import pl.sda.twitter.repository.JpaTweetRepository;
 import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.TweetService;
 import pl.sda.twitter.service.UserService;
@@ -32,12 +38,18 @@ public class TweetsController {
     private final JpaUserRepository userRepository;
     private final JpaBookmarkRepository bookmarkRepository;
     private final UserService userService;
+    private final JpaNotificationsRepository jpaNotificationsRepository;
+    private final JpaTweetRepository jpaTweetRepository;
 
-    public TweetsController(TweetService tweetService, JpaUserRepository userRepository, JpaBookmarkRepository bookmarkRepository, UserService userService) {
+    public TweetsController(TweetService tweetService, JpaUserRepository userRepository, JpaBookmarkRepository bookmarkRepository, UserService userService, JpaNotificationsRepository jpaNotificationsRepository, JpaTweetRepository jpaTweetRepository) {
         this.tweetService = tweetService;
         this.userRepository = userRepository;
         this.bookmarkRepository = bookmarkRepository;
         this.userService = userService;
+        this.jpaNotificationsRepository = jpaNotificationsRepository;
+
+
+        this.jpaTweetRepository = jpaTweetRepository;
     }
 
     @GetMapping("/{id}")
@@ -54,8 +66,9 @@ public class TweetsController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDtoIn dto) {
+    ResponseEntity<Tweet> add(@AuthenticationPrincipal User user, @PathVariable long id, @RequestBody TweetDtoIn dto) {
         Optional<User> userById = userRepository.findById(id);
+        System.out.println(user.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addNewTweet(userById.get(), dto).get());
     }
 
@@ -69,7 +82,16 @@ public class TweetsController {
     }
 
     @PostMapping("/comments/{id}" )
-    public ResponseEntity<Tweet> addComment(@PathVariable(name = "id") long parentTweetId, @RequestBody TweetDtoIn dto) {
+    public ResponseEntity<Tweet> addComment(@AuthenticationPrincipal User user, @PathVariable(name = "id") long parentTweetId, @RequestBody TweetDtoIn dto) {
+        Notification_ notification = new Notification_();
+        Optional<Tweet> tweet = jpaTweetRepository.findById(parentTweetId);
+        if (tweet.isPresent()) {
+            notification.builder()
+                    .username(user.getUsername())
+                    .notification("Użytkownik "+ user.getUsername() +" dodał komentarz do tweeta użytkownika "+ tweet.get().getUsername())
+                    .build();
+            jpaNotificationsRepository.save(notification);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addComment(parentTweetId, dto).get());
     }
 
@@ -77,6 +99,7 @@ public class TweetsController {
     public List<TweetDtoOut> findTweetsByWord(@PathVariable String word) {
         return tweetService.findAllTweetsContainingWords(word);
     }
+
     @PostMapping("/tweet/like/{user}/{id}")
     public ResponseEntity<String> addTweetLike(@PathVariable(name = "user") String username, @PathVariable(name = "id") long id) {
         String likeAddProcess = tweetService.addTweetLike(username, id);

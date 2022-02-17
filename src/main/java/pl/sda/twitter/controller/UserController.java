@@ -2,6 +2,7 @@ package pl.sda.twitter.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.twitter.dto.UserDtoIn;
 import pl.sda.twitter.dto.UserDtoOut;
@@ -18,12 +19,14 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:4200")
 //@CrossOrigin (origins = "*")
 public class UserController {
+    private final PasswordEncoder passwordEncoder;
 
     private final UserService userService;
     private final JpaUserRepository jpaUserRepository;
 
 
-    public UserController(UserService userService, JpaUserRepository jpaUserRepository) {
+    public UserController(PasswordEncoder passwordEncoder, UserService userService, JpaUserRepository jpaUserRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.jpaUserRepository = jpaUserRepository;
     }
@@ -54,7 +57,7 @@ public class UserController {
                 .name(userDtoIn.getName())
                 .surname(userDtoIn.getSurname())
                 .username(userDtoIn.getUsername())
-                .password(userDtoIn.getPassword())
+                .password(passwordEncoder.encode(userDtoIn.getPassword()))
                 .build();
         User savedUser = jpaUserRepository.save(newUser);
         String response  = "Utworzono usera o id: " + savedUser.getId() + " oraz o nicku: " + newUser.getUsername();

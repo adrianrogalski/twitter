@@ -16,4 +16,5 @@ public interface UserService{
     List<User> findAllFollowers(String username);
     List<User> findAllFollowedByUser(String follower);
 
+
 }
