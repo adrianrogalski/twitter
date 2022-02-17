@@ -22,8 +22,10 @@ public interface TweetService {
     Optional<TweetCommentsPage> getTweetComments(long parentTweetId);
     Optional<Tweet> addComment(long parentTweetId, TweetDtoIn tweetDtoIn);
     List<TweetDtoOut> findAllTweetsContainingWords(String word);
-    TweetDtoOut addTweetLike(long id);
+    String addTweetLike(String username, long id);
     void deleteTweetById(long id);
     Optional<Tweet> addBookmark(User user, TweetDtoIn tweet);
     List<Tweet> findAllBookmarks();
+    List<TweetDtoOut> findAllTweetsFromFollowedUsers(List<User> user);
+
 }

@@ -3,6 +3,10 @@ package pl.sda.twitter;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import pl.sda.twitter.dto.TweetDtoIn;
 import pl.sda.twitter.model.Tweet;
 import pl.sda.twitter.model.User;
@@ -35,9 +39,10 @@ public class TwitterApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User user1 = User.builder()
                 .name("Jan")
-                .surname("Jumbo")
+                .surname("Konieczny")
                 .username("jan")
                 .password("$2a$12$xyKIti7SOmJngrj3ZpcsKusZ4MF5G3/K0miPTX6isJj1rn9uFyGVy")
+//                .password("1234")
                 .build();
 
         User savedUser1 = userRepository.save(user1);
@@ -46,8 +51,8 @@ public class TwitterApplication implements CommandLineRunner {
         User user2 = User.builder()
                 .name("Damian")
                 .id(2)
-                .surname("Damiano")
-                .username("damian1234")
+                .surname("Kowalski")
+                .username("damian")
                 .password("$2a$12$xyKIti7SOmJngrj3ZpcsKusZ4MF5G3/K0miPTX6isJj1rn9uFyGVy")
                 .build();
 
@@ -55,7 +60,7 @@ public class TwitterApplication implements CommandLineRunner {
         System.out.println("Utworzono usera o id: " + savedUser2.getId() + " oraz o nicku: " + user2.getUsername());
 
         TweetDtoIn tweetDtoIn1 = TweetDtoIn.builder()
-                .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
+                .content("Exciting time in commercial spaceflight. Polaris Program will undertake a series of tech demo missions culminating in first flight of Starship.")
                 .author(savedUser1.getId())
                 .build();
 
@@ -63,49 +68,49 @@ public class TwitterApplication implements CommandLineRunner {
         System.out.println("Utworzono tweeta o id: " + tweet1.get().getId());
 
         TweetDtoIn tweetDtoIn2 = TweetDtoIn.builder()
-                .content("Daaaaaaaaaaaaaaaaaaaastruj się przez Apple. lub. Zarejestruj się, używając numeru telefonu lub adresu e-mail. Rejestrując się, zgadzasz się na Warunki ...")
+                .content("The duty of a leader is to serve their people, not for the people to serve them")
                 .build();
 
         Optional<Tweet> tweet2 = tweetService.addNewTweet(user1, tweetDtoIn2);
         System.out.println("Utworzono tweeta o id: " + tweet2.get().getId());
 
         TweetDtoIn tweetDtoIn3 = TweetDtoIn.builder()
-                .content("Zrobilem wyszukiwarke tweetow ktora dziala")
+                .content("The National Academy of Engineering is excited to announce the election of 111 new members and 22 international members. The newly elected members will be formally inducted at our annual meeting on Oct 2.")
                 .build();
 
         Optional<Tweet> tweet3 = tweetService.addNewTweet(user1, tweetDtoIn3);
         System.out.println("Utworzono tweeta o id: " + tweet3.get().getId());
 
         TweetDtoIn tweetDtoIn4 = TweetDtoIn.builder()
-                .content("Ale jeszcze nie dziala tak jak powinna")
+                .content("POV: Jungkook stopped in the middle of walking just to see u standing there, ur 2nd last face emoji is ur reaction !")
                 .build();
 
         Optional<Tweet> tweet4 = tweetService.addNewTweet(user1, tweetDtoIn4);
         System.out.println("Utworzono tweeta o id: " + tweet4.get().getId());
 
         TweetDtoIn tweetDtoIn5 = TweetDtoIn.builder()
-                .content("Powinna zadzialac po poprawkach")
+                .content("Przyjemność ponad wszystko. Nowy, hybrydowy Peugeot 308 już w salonach. Sprawdź wyjątkowe oferty leasingowe. Tak wyjątkowe, jak Twój biznes.")
                 .build();
 
         Optional<Tweet> tweet5 = tweetService.addNewTweet(user2, tweetDtoIn5);
         System.out.println("Utworzono tweeta o id: " + tweet5.get().getId());
 
         TweetDtoIn tweetDtoIn6 = TweetDtoIn.builder()
-                .content("damian1234 sdansidasidbisbciscsdicixcis")
+                .content("U.S. Birthrate Fell By 4% In 2020, Hitting Another Record LowFor the sixth year in a row, the number of U.S. births fell in 2020, reaching the lowest level since 1979. The fertility rate remains below ")
                 .build();
 
         Optional<Tweet> tweet6 = tweetService.addNewTweet(user1, tweetDtoIn6);
         System.out.println("Utworzono tweeta o id: " + tweet6.get().getId());
 
         TweetDtoIn tweetDtoIn7 = TweetDtoIn.builder()
-                .content("#jobs")
+                .content("CEO, @dsn_software, @Cytek_Security, and @TechEvolutions | Revolutionizing Digital Healthcare | Transforming Cybersecurity #jobs")
                 .build();
 
         Optional<Tweet> tweet7 = tweetService.addNewTweet(user2, tweetDtoIn7);
         System.out.println("Utworzono tweeta o id: " + tweet7.get().getId());
 
         TweetDtoIn tweetDtoIn8 = TweetDtoIn.builder()
-                .content("#musk sdkasfjd #hello")
+                .content("#musk 1469 Starlink satellites active 272 moving to operational orbits Laser links activate soon #hello")
                 .build();
 
         Optional<Tweet> tweet8 = tweetService.addNewTweet(user1, tweetDtoIn8);
@@ -125,5 +130,12 @@ public class TwitterApplication implements CommandLineRunner {
 
 
         System.out.println(tweetService.getTweetComments(1));
+
+        System.out.println(tweetService.addTweetLike("jan", 1));
+        System.out.println(tweetService.addTweetLike("jan", 2));
+        System.out.println(tweetService.addTweetLike("jan", 3));
+
+
+
     }
 }

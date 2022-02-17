@@ -22,4 +22,5 @@ public class HashtagController {
     public List<String> getPopularHashtags() {
         return hashtagService.getPopularHashtags();
     }
+
 }

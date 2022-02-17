@@ -14,6 +14,7 @@ import pl.sda.twitter.model.User;
 import pl.sda.twitter.repository.JpaBookmarkRepository;
 import pl.sda.twitter.repository.JpaUserRepository;
 import pl.sda.twitter.service.TweetService;
+import pl.sda.twitter.service.UserService;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -24,16 +25,19 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
+
 public class TweetsController {
+
     private final TweetService tweetService;
     private final JpaUserRepository userRepository;
     private final JpaBookmarkRepository bookmarkRepository;
+    private final UserService userService;
 
-
-    public TweetsController(TweetService tweetService, JpaUserRepository userRepository, JpaBookmarkRepository bookmarkRepository) {
+    public TweetsController(TweetService tweetService, JpaUserRepository userRepository, JpaBookmarkRepository bookmarkRepository, UserService userService) {
         this.tweetService = tweetService;
         this.userRepository = userRepository;
         this.bookmarkRepository = bookmarkRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
@@ -43,21 +47,28 @@ public class TweetsController {
 
     @GetMapping("/user/{username}")
     public List<TweetDtoOut> findTweetsByUsername(@PathVariable String username) {
-        return tweetService.findAllTweetsByUsername(username);
+        List<TweetDtoOut> ownedTweets = tweetService.findAllTweetsByUsername(username);
+        List<User> followedUsers = userService.findAllFollowedByUser(username);
+        ownedTweets.addAll(tweetService.findAllTweetsFromFollowedUsers(followedUsers));
+        return ownedTweets;
     }
 
-    @PostMapping("/{id}")
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDtoIn dto) {
         Optional<User> userById = userRepository.findById(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addNewTweet(userById.get(), dto).get());
     }
 
-    @GetMapping("/comments/{id}")
+    @GetMapping("/comments/{user}/{id}")
     public ResponseEntity<TweetCommentsPage> getComments(@PathVariable(name = "id") long parentTweetId) {
+
+//        @RequestHeader HttpHeaders headers
+//        System.out.println("User has authorities: " + headers);
+
         return ResponseEntity.of(tweetService.getTweetComments(parentTweetId));
     }
 
-    @PostMapping("/comments/{id}")
+    @PostMapping("/comments/{id}" )
     public ResponseEntity<Tweet> addComment(@PathVariable(name = "id") long parentTweetId, @RequestBody TweetDtoIn dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addComment(parentTweetId, dto).get());
     }
@@ -66,9 +77,11 @@ public class TweetsController {
     public List<TweetDtoOut> findTweetsByWord(@PathVariable String word) {
         return tweetService.findAllTweetsContainingWords(word);
     }
-    @PostMapping("/tweet/like/{id}")
-    public ResponseEntity<TweetDtoOut> addTweetLike(@PathVariable long id) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addTweetLike(id));
+    @PostMapping("/tweet/like/{user}/{id}")
+    public ResponseEntity<String> addTweetLike(@PathVariable(name = "user") String username, @PathVariable(name = "id") long id) {
+        String likeAddProcess = tweetService.addTweetLike(username, id);
+        System.out.println(likeAddProcess);
+        return ResponseEntity.status(HttpStatus.CREATED).body(likeAddProcess);
     }
 
     @GetMapping("image/{name}")
@@ -103,11 +116,12 @@ public class TweetsController {
         tweetService.deleteTweetById(id);
     }
 
-    @PostMapping("/bookmark/{id}")
-    ResponseEntity<Tweet> addBookmark(@PathVariable long id, @RequestBody TweetDtoIn dto) {
-        Optional<User> userById = userRepository.findById(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addBookmark(userById.get(), dto).get());
+    @PostMapping("/bookmark/{user}/{id}")
+    ResponseEntity<Tweet> addBookmark(@PathVariable(name = "username") String username, @PathVariable(name = "id") long id, @RequestBody TweetDtoIn dto) {
+        Optional<User> user = userRepository.findUserByUsername(username);
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addBookmark(user.get(), dto).get());
     }
+
     @GetMapping("/bookmarklist")
     public List<Tweet> findBookmarks() {
         return tweetService.findAllBookmarks();
