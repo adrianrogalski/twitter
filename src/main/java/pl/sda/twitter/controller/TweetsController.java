@@ -85,6 +85,9 @@ public class TweetsController {
     public ResponseEntity<Tweet> addComment(@AuthenticationPrincipal User user, @PathVariable(name = "id") long parentTweetId, @RequestBody TweetDtoIn dto) {
         Notification_ notification = new Notification_();
         Optional<Tweet> tweet = jpaTweetRepository.findById(parentTweetId);
+
+/**        dorobić zwiększanie ilości komentarzy **/
+//        tweet.get().setComments(tweet.get().getComments()+1);
         if (tweet.isPresent()) {
             notification.builder()
                     .username(user.getUsername())
