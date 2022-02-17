@@ -18,7 +18,7 @@ public class TweetMapper {
                 .content(tweet.getContent())
                 .comments(tweet.getComments())
                 .likes(tweet.getLikes())
-                .comments(tweet.getComments())
+                //.comments(tweet.getComments())
                 .username(tweet.getUsername())
                 .publishingTime(timeMapper(tweet.getPublishingTime()))
                 .build();

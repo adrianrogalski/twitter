@@ -117,5 +117,8 @@ public class TwitterApplication implements CommandLineRunner {
 
         tweetService.addBookmark(user1,tweetDtoIn1);
         System.out.println("Dodano zakładke");
+
+        tweetService.addComment(tweet1.get().getId(), tweetDtoIn1);
+        tweetService.addComment(tweet1.get().getId(), tweetDtoIn2);
     }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,4 +26,6 @@ public class Tweet {
     private int retweets;
     private int comments;
     private LocalDateTime publishingTime;
+    @OneToMany
+    private List<User> userIdLikes;
 }

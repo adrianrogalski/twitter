@@ -110,16 +110,17 @@ public class TweetServiceJpa implements TweetService{
 
     @Override
     @Transactional
-    public TweetDtoOut addTweetLike(long id){
+    public void addTweetLike(User user, long id){
         final Optional<Tweet> opTweet = jpaTweetRepository.findById(id);
-        Tweet tweet = opTweet.get();
         if (opTweet.isPresent()){
-            int likes = tweet.getLikes();
-            likes++;
-            tweet.setLikes(likes);
-            jpaTweetRepository.save(tweet);
+            Tweet tweet = opTweet.get();
+            if(tweet.getUserIdLikes().contains(user)){
+                int likes = tweet.getLikes();
+                likes++;
+                tweet.setLikes(likes);
+                jpaTweetRepository.save(tweet);
+            }
         }
-        return TweetMapper.mapToTweetDtoOut(tweet);
     }
 
     @Override

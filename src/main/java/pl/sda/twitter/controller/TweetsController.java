@@ -4,6 +4,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.sda.twitter.dto.TweetCommentsPage;
@@ -46,10 +47,9 @@ public class TweetsController {
         return tweetService.findAllTweetsByUsername(username);
     }
 
-    @PostMapping("/{id}")
-    ResponseEntity<Tweet> add(@PathVariable long id, @RequestBody TweetDtoIn dto) {
-        Optional<User> userById = userRepository.findById(id);
-        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addNewTweet(userById.get(), dto).get());
+    @PostMapping("/new-tweet")
+    ResponseEntity<Tweet> add(@AuthenticationPrincipal User user, @RequestBody TweetDtoIn dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addNewTweet(user, dto).get());
     }
 
     @GetMapping("/comments/{id}")
@@ -67,8 +67,9 @@ public class TweetsController {
         return tweetService.findAllTweetsContainingWords(word);
     }
     @PostMapping("/tweet/like/{id}")
-    public ResponseEntity<TweetDtoOut> addTweetLike(@PathVariable long id) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(tweetService.addTweetLike(id));
+    @ResponseStatus(HttpStatus.OK)
+    public void addTweetLike(@AuthenticationPrincipal User user, @PathVariable long id) {
+        tweetService.addTweetLike(user, id);
     }
 
     @GetMapping("image/{name}")
